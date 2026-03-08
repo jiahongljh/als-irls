@@ -17,6 +17,26 @@ The Autocovariance Least-Squares (ALS) method is a powerful tool for estimating 
 
 Our extensive simulations demonstrate that ALS-IRLS reduces the covariance estimation RMSE by **over two orders of magnitude** compared to standard ALS, allowing downstream state estimation to approach the Oracle lower bound even under severe $\epsilon$-contamination.
 
+## 📈 Experimental Results
+
+The following figures demonstrate the superiority of the proposed ALS-IRLS method under severe measurement outlier contamination ($\epsilon = 15\%$, magnitude multiplier $\omega = 8$).
+
+### 1. Covariance Estimation Accuracy
+
+<p align="center">
+  <img src="images/scatter_plot.png" alt="Joint scatter of Q and R" width="800">
+</p>
+
+*Figure 1: Monte Carlo scatter of estimated $(Q, R)$ over 100 trials. The standard ALS estimates (blue) are severely biased due to outliers, clustering far from the true values. In contrast, the proposed ALS-IRLS estimates (red) tightly concentrate around the true covariance values (black star).*
+
+### 2. State Estimation Performance (End-to-End)
+
+<p align="center">
+  <img src="images/state_rmse.png" alt="State Estimation RMSE" width="600">
+</p>
+
+*Figure 2: Mean state estimation RMSE across 5 baselines. While filter-level robust methods (Student's-t KF and MCKF) suffer when initial covariances are misspecified, KF+ALS-IRLS successfully identifies the true statistics online, achieving state RMSE within 9% of the Oracle lower bound.*
+
 ## 🚀 Repository Structure
 
 The codebase is organized into a modular MATLAB framework.
@@ -44,40 +64,6 @@ The codebase is organized into a modular MATLAB framework.
   - Implementation of the Maximum Correntropy Kalman Filter (MCKF).
 - `run_kf.m`
   - Standard Kalman Filter routine used by Oracle, ALS, and ALS-IRLS.
-
-## 💻 Getting Started
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/jiahongljh/als-irls.git
-   cd als-irls
-Run the simulation in MATLAB:
-Simply open MATLAB, navigate to the folder, and run the main script:
-
-matlab
-als_irls_main
-Expected Output:
-
-The script will execute the third-order LTI system simulation described in Section IV of the paper.
-
-It will output the state estimation RMSE for all 5 methods directly into the MATLAB console.
-
-It will generate plots showcasing the joint scatter of the estimated $Q$ and $R$ parameters (similar to Fig. 1 in the paper).
-
-📊 Citation
-If you find this code useful for your research, please cite our paper:
-
-text
-@article{li202Xalsirls,
-  author={Li, Jiahong and Deng, Fang},
-  title={Outlier-Robust Autocovariance Least-Squares Estimation via Iteratively Reweighted Least Squares},
-  journal={IEEE Signal Processing Letters},
-  year={202X},
-  volume={},
-  number={},
-  pages={}
-}
-(Note: Citation details will be updated upon publication).
 
 📧 Contact
 For any questions or discussions regarding the algorithm, please feel free to open an issue or contact:
