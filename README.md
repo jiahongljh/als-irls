@@ -26,7 +26,7 @@ The following figures demonstrate the superiority of the proposed ALS-IRLS metho
 ### 1. Covariance Estimation Accuracy
 
 <p align="center">
-  <img src="images/scatter_plot.png" alt="Joint scatter of Q and R" width="800">
+  <img src="images/scatter_plot.jpg" alt="Joint scatter of Q and R" width="800">
 </p>
 
 *Figure 1: Monte Carlo scatter of estimated $(Q, R)$ over 100 trials. The standard ALS estimates (blue) are severely biased due to outliers, clustering far from the true values. In contrast, the proposed ALS-IRLS estimates (red) tightly concentrate around the true covariance values (black star).*
@@ -34,7 +34,7 @@ The following figures demonstrate the superiority of the proposed ALS-IRLS metho
 ### 2. State Estimation Performance (End-to-End)
 
 <p align="center">
-  <img src="images/state_rmse.png" alt="State Estimation RMSE" width="600">
+  <img src="images/state_rmse.jpg" alt="State Estimation RMSE" width="600">
 </p>
 
 *Figure 2: Mean state estimation RMSE across 5 baselines. While filter-level robust methods (Student's-t KF and MCKF) suffer when initial covariances are misspecified, KF+ALS-IRLS successfully identifies the true statistics online, achieving state RMSE within 9% of the Oracle lower bound.*
