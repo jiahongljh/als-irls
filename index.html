@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ALS-IRLS: Outlier-Robust Autocovariance Least-Squares Estimation</title>
 
+  <!-- 引入字体和 Bulma CSS 框架 -->
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -15,14 +16,22 @@
     .publication-title { font-weight: 700; }
     .author-block { display: inline-block; margin-right: 15px; font-size: 1.2rem; }
     .institution-block { font-size: 1.1rem; color: #666; margin-bottom: 20px; }
-    .abstract-text { text-align: justify; }
+    .content-block { text-align: justify; }
     .link-block a { border-radius: 20px; margin: 5px; }
     .hero-body { padding: 3rem 1.5rem; }
     .section { padding: 3rem 1.5rem; }
+    .image-caption { font-size: 0.95rem; color: #555; text-align: justify; margin-top: 10px; line-height: 1.5;}
+    .math-block { background-color: #f9f9f9; padding: 10px; border-radius: 5px; text-align: center; }
+    .figure-title { font-weight: 600; color: #363636; margin-bottom: 5px; }
   </style>
+  
+  <!-- 引入 MathJax 用于渲染数学公式 -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 
+<!-- 头部信息 -->
 <section class="hero">
   <div class="hero-body">
     <div class="container is-max-desktop">
@@ -44,16 +53,15 @@
             <span class="author-block"><sup>2</sup>Beijing Institute of Technology</span>
           </div>
 
+          <!-- 链接按钮 -->
           <div class="column has-text-centered">
             <div class="publication-links">
-              <!-- arXiv Link. -->
               <span class="link-block">
                 <a href="https://arxiv.org/abs/2603.08158" class="button is-dark is-outlined">
                   <span class="icon"><i class="fas fa-file-pdf"></i></span>
                   <span>arXiv</span>
                 </a>
               </span>
-              <!-- Code Link. -->
               <span class="link-block">
                 <a href="https://github.com/jiahongljh/als-irls" class="button is-dark is-outlined">
                   <span class="icon"><i class="fab fa-github"></i></span>
@@ -68,18 +76,18 @@
   </div>
 </section>
 
+<!-- 摘要部分 -->
 <section class="section">
   <div class="container is-max-desktop">
-    <!-- Abstract. -->
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
         <h2 class="title is-3">Abstract</h2>
-        <div class="content has-text-justified">
+        <div class="content content-block">
           <p>
             The autocovariance least squares (ALS) method is a computationally efficient approach for estimating noise covariances in Kalman filters without requiring specific noise models. However, conventional ALS and its variants rely on the classic least mean squares (LMS) criterion, making them highly sensitive to measurement outliers and prone to severe performance degradation.
           </p>
           <p>
-            To overcome this limitation, this paper proposes a novel outlier-robust ALS algorithm, termed <strong>ALS-IRLS</strong>, based on the iteratively reweighted least squares (IRLS) framework. Specifically, the proposed approach introduces a <strong>two-tier robustification strategy</strong>. First, an innovation-level adaptive thresholding mechanism is employed to filter out heavily contaminated data. Second, the outlier-contaminated autocovariance is formulated using an $\epsilon$-contamination model, where the standard LMS criterion is replaced by the Huber cost function.
+            To overcome this limitation, this paper proposes a novel outlier-robust ALS algorithm, termed <strong>ALS-IRLS</strong>, based on the iteratively reweighted least squares (IRLS) framework. Specifically, the proposed approach introduces a <strong>two-tier robustification strategy</strong>. First, an innovation-level adaptive thresholding mechanism is employed to filter out heavily contaminated data. Second, the outlier-contaminated autocovariance is formulated using an \( \epsilon \)-contamination model, where the standard LMS criterion is replaced by the Huber cost function.
           </p>
           <p>
             The IRLS method is then utilized to iteratively adjust data weights based on estimation deviations, effectively mitigating the influence of residual outliers. Comparative simulations demonstrate that ALS-IRLS reduces the root-mean-square error (RMSE) of noise covariance estimates by over two orders of magnitude compared to standard ALS, and significantly enhances downstream state estimation accuracy, outperforming existing outlier-robust Kalman filters.
@@ -90,53 +98,127 @@
   </div>
 </section>
 
-<section class="section">
+<!-- 方法细节与运行过程可视化 -->
+<section class="section" style="background-color: #f5f5f5;">
   <div class="container is-max-desktop">
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h2 class="title is-3 has-text-centered">Methodology</h2>
-        <div class="content has-text-justified">
+        <h2 class="title is-3 has-text-centered">Methodology: Two-Tier Robustification</h2>
+        <div class="content content-block">
           <p>
-            ALS-IRLS tackles the vulnerability of standard ALS by integrating robustness at two levels:
+            Our MATLAB implementation demonstrates how ALS-IRLS tackles standard ALS vulnerabilities from two distinct levels:
           </p>
-          <ul>
-            <li><strong>Hard Rejection at Innovation Level:</strong> A MAD-based robust scale estimator flags and discards severe anomalies before empirical autocovariances are calculated.</li>
-            <li><strong>Soft Weighting at Regression Level:</strong> We substitute the sensitive $\ell_2$-norm LMS objective with the robust Huber cost function, optimized via IRLS. This iteratively applies adaptive weights to the autocovariance equations based on their regression residuals.</li>
-          </ul>
+          
+          <!-- 第一层：新息剔除可视化 -->
+          <div class="columns is-vcentered mt-4">
+            <div class="column is-half">
+              <h4 class="figure-title">Tier 1: Innovation-Level MAD Thresholding</h4>
+              <p class="image-caption">
+                Before computing the empirical autocovariance, ALS-IRLS employs a <strong>Median Absolute Deviation (MAD)</strong> robust scale estimator on the innovations \( e_k \). As shown in the detection plot, normal innovations (blue) fall within the adaptive threshold, while severe outliers (red triangles) injected via the \( \epsilon \)-contamination model are successfully flagged and excluded. This prevents the lag-0 autocovariance \( \hat{C}_{e,0} \) from catastrophic inflation.
+              </p>
+            </div>
+            <div class="column is-half has-text-centered">
+              <!-- 请在仓库中上传您的 Fig 5/6 新息检测图 -->
+              <img src="https://raw.githubusercontent.com/jiahongljh/als-irls/main/images/innovation_detection.jpg" alt="Innovation Outlier Detection" style="width:100%; border-radius: 8px; border: 1px solid #ddd;">
+              <p class="is-size-7 mt-1"><em>Fig A: Outlier detection in innovations.</em></p>
+            </div>
+          </div>
+
+          <!-- 第二层：IRLS权重分配可视化 -->
+          <div class="columns is-vcentered mt-4">
+            <div class="column is-half has-text-centered">
+              <!-- 请在仓库中上传您的 Fig 7/8 IRLS权重图 -->
+              <img src="https://raw.githubusercontent.com/jiahongljh/als-irls/main/images/irls_weights.jpg" alt="IRLS Huber Weights" style="width:100%; border-radius: 8px; border: 1px solid #ddd;">
+              <p class="is-size-7 mt-1"><em>Fig B: IRLS Huber weights assigned to regression equations.</em></p>
+            </div>
+            <div class="column is-half">
+              <h4 class="figure-title">Tier 2: Soft Weighting via IRLS</h4>
+              <p class="image-caption">
+                Even after initial filtering, residual outliers may still distort the linear regression \( A\theta = b \). We replace the standard \( \ell_2 \)-norm LMS objective with the robust <strong>Huber loss function</strong>. Optimized via Iteratively Reweighted Least Squares (IRLS), the algorithm dynamically assigns lower weights to contaminated autocovariance equations based on their regression residuals. Normal equations retain a weight near \(1.0\), while corrupted ones are heavily down-weighted, ensuring an unbiased covariance estimate.
+              </p>
+            </div>
+          </div>
+          
         </div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- 实验图表部分 -->
 <section class="section">
   <div class="container is-max-desktop">
     <div class="columns is-centered">
       <div class="column is-full-width">
         <h2 class="title is-3 has-text-centered">Experimental Results</h2>
-        <div class="content has-text-justified">
-          <p>We tested the algorithm on an LTI system under severe $\epsilon$-contamination (e.g., 15% rate with huge magnitudes).</p>
-          
-          <div class="columns is-centered">
-            <div class="column is-half has-text-centered">
-              <img src="https://raw.githubusercontent.com/jiahongljh/als-irls/main/images/scatter_plot.png" alt="Joint scatter of Q and R" style="width:100%; max-width:400px; border-radius: 8px;">
-              <p class="is-size-6 mt-2"><strong>Fig 1:</strong> ALS-IRLS (Red) successfully recovers true covariances, while standard ALS (Blue) breaks down completely.</p>
-            </div>
-            <div class="column is-half has-text-centered">
-              <img src="https://raw.githubusercontent.com/jiahongljh/als-irls/main/images/state_rmse.png" alt="State Estimation RMSE" style="width:100%; max-width:400px; border-radius: 8px;">
-              <p class="is-size-6 mt-2"><strong>Fig 2:</strong> State Estimation RMSE. Our algorithm achieves tracking accuracy within 9% of the optimal Oracle bound.</p>
+        <div class="content content-block">
+          <p>
+            We evaluated the algorithm via 100 Monte Carlo trials on a 3rd-order LTI system. Outliers were injected into the measurement model using an \( \epsilon = 15\% \) contamination rate with a magnitude multiplier of \( 8\times \).
+          </p>
+
+          <!-- 核心图表 1: 散点图与分布图 -->
+          <div class="box mt-5">
+            <h4 class="figure-title has-text-centered">1. Covariance Estimation Accuracy Breakdown</h4>
+            <div class="columns is-vcentered">
+              <div class="column is-7 has-text-centered">
+                <!-- 这里使用您刚刚上传的图片 -->
+                <img src="https://raw.githubusercontent.com/jiahongljh/als-irls/main/images/scatter_plot.jpg" alt="Covariance Estimates Scatter" style="width:100%; border-radius: 8px;">
+              </div>
+              <div class="column is-5">
+                <p class="image-caption">
+                  <strong>Left panel:</strong> The joint scatter plot of estimated \( (\hat{Q}_w, \hat{R}_v) \). Standard ALS estimates (blue dots) are highly dispersed and severely biased towards inflated values due to the outlier contamination. Conversely, the proposed ALS-IRLS estimates (red dots) are tightly clustered around the true covariance values (black asterisk, \( Q=5, R=3 \)).<br><br>
+                  <strong>Right panel:</strong> The marginal histogram of the estimated process noise covariance \( \hat{Q}_w \). The ALS method completely fails, spreading predictions far beyond the true value. ALS-IRLS consistently reconstructs the correct noise statistics with extremely low variance.
+                </p>
+              </div>
             </div>
           </div>
+          
+          <!-- 核心图表 2: 鲁棒性上限测试 (Sweep) -->
+          <div class="box mt-5">
+            <div class="columns is-vcentered">
+              <div class="column is-5">
+                <h4 class="figure-title">2. Robustness against Varying Contamination Rates</h4>
+                <p class="image-caption">
+                  To test the boundary of our algorithm, we swept the outlier rate \( \epsilon \) from \( 0\% \) up to \( 30\% \). As \( \epsilon \) grows, the RMSE of standard ALS grows exponentially because contaminated data dominates the least-squares solution. Remarkably, ALS-IRLS maintains a <strong>near-constant low RMSE</strong> across all contamination levels, experimentally validating the 50% theoretical breakdown point inherited from our MAD-based architecture.
+                </p>
+              </div>
+              <div class="column is-7 has-text-centered">
+                <!-- 请上传您的 Fig 4 RMSE对比/Sweep图 -->
+                <img src="https://raw.githubusercontent.com/jiahongljh/als-irls/main/images/rmse_sweep.jpg" alt="RMSE Outlier Rate Sweep" style="width:100%; border-radius: 8px;">
+                <p class="is-size-7 mt-1"><em>Fig C: Covariance RMSE vs. Contamination Rate (\( \epsilon \)).</em></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 核心图表 3: 状态估计表现 (Downstream Task) -->
+          <div class="box mt-5">
+            <h4 class="figure-title has-text-centered">3. Downstream State Estimation Performance</h4>
+            <div class="columns is-vcentered mt-2">
+              <div class="column is-6 has-text-centered">
+                <!-- 这里使用您刚刚上传的图片 -->
+                <img src="https://raw.githubusercontent.com/jiahongljh/als-irls/main/images/state_rmse-2.jpg" alt="State Estimation RMSE" style="width:100%; border-radius: 8px;">
+              </div>
+              <div class="column is-6">
+                <p class="image-caption">
+                  The ultimate goal of covariance estimation is to provide accurate parameters for the Kalman Filter. In an outlier-free evaluation phase, we compared state estimation RMSE across 5 paradigms.<br><br>
+                  Because the true noise statistics are unknown, filter-level robust methods (like <strong>Student-t KF [1]</strong> and <strong>MCKF [2]</strong>) operating with misspecified initial covariances suffer severely (inflated RMSE). The KF relying on standard ALS performs the worst due to catastrophic \( \hat{Q} \) inflation.<br><br>
+                  By accurately identifying the true noise statistics online, <strong>KF + ALS-IRLS (red bar)</strong> substantially outperforms all non-Oracle baselines, achieving an RMSE within <strong>9% of the ideal Oracle Lower Bound</strong> (black bar).
+                </p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="section" id="BibTeX">
+<!-- BibTeX -->
+<section class="section" id="BibTeX" style="background-color: #f5f5f5;">
   <div class="container is-max-desktop content">
     <h2 class="title">BibTeX</h2>
-    <pre><code>@article{li2026outlier,
+    <pre style="background-color: #eaeaea;"><code>@article{li2026outlier,
   title={Outlier-robust Autocovariance Least Square Estimation via Iteratively Reweighted Least Square},
   author={Li, Jiahong and Deng, Fang},
   journal={arXiv preprint arXiv:2603.08158},
@@ -145,11 +227,12 @@
   </div>
 </section>
 
+<!-- Footer -->
 <footer class="footer">
   <div class="container">
     <div class="content has-text-centered">
       <p>
-        Website template borrowed from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> and <a href="https://yangchris11.github.io/samurai/">SAMURAI</a>.
+        Website template borrowed from <a href="https://github.com/nerfies/nerfies.github.io" target="_blank">Nerfies</a> and <a href="https://yangchris11.github.io/samurai/" target="_blank">SAMURAI</a>.
       </p>
     </div>
   </div>
