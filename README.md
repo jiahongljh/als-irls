@@ -1,5 +1,7 @@
 # ALS-IRLS: Outlier-Robust Autocovariance Least-Squares Estimation
 
+[[Arxiv]](https://arxiv.org/abs/2603.08158) | [[Project Page]](https://jiahongljh.github.io/als-irls/)
+
 This repository provides the official MATLAB implementation of the **ALS-IRLS** algorithm, as proposed in the paper:
 
 > **"Outlier-Robust Autocovariance Least-Squares Estimation via Iteratively Reweighted Least Squares"**  
@@ -68,6 +70,6 @@ The codebase is organized into a modular MATLAB framework.
 📧 Contact
 For any questions or discussions regarding the algorithm, please feel free to open an issue or contact:
 
-Jiahong Li (jqr_jiahong@buu.edu.cn)
+Jiahong Li (lijiahong.bit@gmail.com)
 
 Fang Deng (dengfang@bit.edu.cn)
